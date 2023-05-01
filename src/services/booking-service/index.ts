@@ -1,10 +1,8 @@
 import { Booking, Room } from '@prisma/client';
 import { notFoundError, unauthorizedError } from '@/errors';
-import { cannotListHotelsError } from '@/errors/cannot-list-hotels-error';
 import bookingRepository from '@/repositories/booking-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
-import { exclude } from '@/utils/prisma-utils';
 import { forbiddenBookingError } from '@/errors/Forbidden-booking.error';
 
 async function getBooking(userId: number): Promise<Booking> {
@@ -35,8 +33,19 @@ async function createBooking(userId: number, roomId: number) {
   if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
     throw forbiddenBookingError();
   }
-  const result = await bookingRepository.createBooking(userId, roomId);
-  //if (!booking) throw notFoundError();
+
+  const room = await bookingRepository.findRoomId(roomId);
+  if (!room) {
+    throw notFoundError();
+  }
+  if (room.capacity <= 0) {
+    throw forbiddenBookingError();
+  }
+
+  const bookingId = await bookingRepository.createBooking(userId, roomId);
+  if (!bookingId) throw notFoundError();
+
+  const result = await bookingRepository.findBookingId(bookingId.id);
 
   return result;
 }
