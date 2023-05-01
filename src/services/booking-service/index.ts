@@ -38,16 +38,16 @@ async function createBooking(userId: number, roomId: number) {
   if (!room) {
     throw notFoundError();
   }
-  if (room.capacity <= 0) {
+  if (room.capacity === 0) {
     throw forbiddenBookingError();
   }
 
-  const bookingId = await bookingRepository.createBooking(userId, roomId);
-  if (!bookingId) throw notFoundError();
+  const booking = await bookingRepository.createBooking(userId, roomId);
+  if (!booking) throw notFoundError();
 
-  const result = await bookingRepository.findBookingId(bookingId.id);
+  const result = await bookingRepository.findBooking(userId);
 
-  return result;
+  return result.id;
 }
 
 const bookingService = { getBooking, createBooking };
