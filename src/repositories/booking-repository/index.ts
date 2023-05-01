@@ -34,15 +34,12 @@ async function createBooking(userId: number, roomId: number) {
   });
 }
 
-async function upadateBooking(userId: number, roomId: number) {
-  return prisma.booking.upsert({
+async function upadateBooking(userId: number, roomId: number, bookingId: number) {
+  return prisma.booking.update({
     where: {
-      id: userId,
+      id: bookingId,
     },
-    update: {
-      roomId,
-    },
-    create: {
+    data: {
       userId,
       roomId,
     },

@@ -47,10 +47,12 @@ async function createBooking(userId: number, roomId: number) {
   const booking = await bookingRepository.createBooking(userId, roomId);
   if (!booking) throw notFoundError();
 
-  return booking;
+  const bookingId = { bookingId: booking.id };
+
+  return bookingId;
 }
 
-async function upadateBooking(userId: number, roomId: number) {
+async function upadateBooking(userId: number, roomId: number, bookingId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) {
     throw notFoundError();
@@ -71,10 +73,12 @@ async function upadateBooking(userId: number, roomId: number) {
 
   //  const result = await bookingRepository.findBooking(userId);
 
-  const booking = await bookingRepository.upadateBooking(userId, roomId);
+  const booking = await bookingRepository.upadateBooking(userId, roomId, bookingId);
   if (!booking) throw notFoundError();
 
-  return booking.id;
+  const result = { bookingId: booking.id };
+
+  return result;
 }
 
 const bookingService = { getBooking, createBooking, upadateBooking };
