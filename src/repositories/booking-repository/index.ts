@@ -3,9 +3,9 @@ import { prisma } from '@/config';
 async function findBooking(userId: number) {
   return prisma.booking.findMany({
     where: { userId },
-    include: {
-      Room: true,
-    },
+    // include: {
+    //   Room: true,
+    // },
   });
 }
 
