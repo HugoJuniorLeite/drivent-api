@@ -33,3 +33,23 @@ export async function createBooking(req: AuthenticatedRequest, res: Response, ne
     // return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
+
+export async function updateBooking(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  const { userId } = req;
+  const { roomId } = req.body;
+
+  try {
+    // if (!userId || !roomId) return res.sendStatus(httpStatus.BAD_REQUEST);
+
+    const booking = await bookingService.upadateBooking(userId, roomId);
+    if (!booking) return res.sendStatus(httpStatus.NOT_FOUND);
+
+    return res.status(httpStatus.OK).send(booking);
+  } catch (error) {
+    if (error.name === 'UnauthorizedError') {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+    next(error);
+    // return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
