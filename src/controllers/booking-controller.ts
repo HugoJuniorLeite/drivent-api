@@ -3,19 +3,18 @@ import { NextFunction, Response } from 'express';
 import { AuthenticatedRequest } from '@/middlewares';
 import bookingService from '@/services/booking-service';
 
-export async function getBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function getBooking(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
   const { userId } = req;
 
   try {
     const getBooking = await bookingService.getBooking(userId);
     return res.status(httpStatus.OK).send(getBooking);
   } catch (error) {
-    1;
     next(error);
   }
 }
 
-export async function createBooking(req: AuthenticatedRequest, res: Response) {
+export async function createBooking(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
   const { userId } = req;
   const { roomId } = req.body;
 
@@ -30,6 +29,7 @@ export async function createBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'UnauthorizedError') {
       return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
-    return res.sendStatus(httpStatus.NOT_FOUND);
+    next(error);
+    // return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }

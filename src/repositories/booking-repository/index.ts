@@ -1,11 +1,14 @@
+import { Booking, Room } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function findBooking(userId: number) {
-  return prisma.booking.findMany({
-    where: { userId },
-    // include: {
-    //   Room: true,
-    // },
+  return prisma.booking.findFirst({
+    where: {
+      userId,
+    },
+    include: {
+      Room: true,
+    },
   });
 }
 
