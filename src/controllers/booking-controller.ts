@@ -42,7 +42,7 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response, ne
   try {
     // if (!userId || !roomId) return res.sendStatus(httpStatus.BAD_REQUEST);
 
-    const booking = await bookingService.upadateBooking(userId, roomId, bookingId);
+    const booking = await bookingService.upadateBooking(userId, roomId, +bookingId);
     if (!booking) return res.sendStatus(httpStatus.NOT_FOUND);
 
     return res.status(httpStatus.OK).send(booking);
