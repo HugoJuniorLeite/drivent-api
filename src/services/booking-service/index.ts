@@ -5,6 +5,7 @@ import bookingRepository from '@/repositories/booking-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
 import { exclude } from '@/utils/prisma-utils';
+import { forbiddenBookingError } from '@/errors/Forbidden-booking.error';
 
 async function getBooking(userId: number): Promise<Booking> {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
@@ -14,7 +15,7 @@ async function getBooking(userId: number): Promise<Booking> {
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
-    throw cannotListHotelsError();
+    throw forbiddenBookingError();
   }
   const booking = await bookingRepository.findBooking(userId);
   if (!booking) throw notFoundError();
@@ -32,7 +33,7 @@ async function createBooking(userId: number, roomId: number) {
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
-    throw cannotListHotelsError();
+    throw forbiddenBookingError();
   }
   const booking = await bookingRepository.createBooking(userId, roomId);
   if (!booking) throw notFoundError();
