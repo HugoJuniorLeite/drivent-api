@@ -1,6 +1,6 @@
 import { prisma } from '@/config';
 
-async function findbooking(userId: number) {
+async function findBooking(userId: number) {
   return prisma.booking.findMany({
     where: { userId },
     include: {
@@ -9,8 +9,15 @@ async function findbooking(userId: number) {
   });
 }
 
+async function createBooking(userId: number, roomId: number) {
+  return prisma.booking.create({
+    data: { userId, roomId },
+  });
+}
+
 const bookingRepository = {
-  findbooking,
+  findBooking,
+  createBooking,
 };
 
 export default bookingRepository;

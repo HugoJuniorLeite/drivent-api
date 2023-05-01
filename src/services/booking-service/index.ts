@@ -14,10 +14,26 @@ async function getBooking(userId: number) {
   if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
     throw cannotListHotelsError();
   }
-  const booking = await bookingRepository.findbooking(userId);
+  const booking = await bookingRepository.findBooking(userId);
   if (!booking) throw notFoundError();
 
   return booking;
 }
 
-export default { getBooking };
+async function createBooking(userId: number, roomId: number) {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrollment) {
+    throw notFoundError();
+  }
+
+  const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
+  if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
+    throw cannotListHotelsError();
+  }
+  const booking = await bookingRepository.createBooking(userId, roomId);
+  if (!booking) throw notFoundError();
+
+  return booking;
+}
+
+export default { getBooking, createBooking };
