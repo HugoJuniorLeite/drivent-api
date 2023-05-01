@@ -19,7 +19,7 @@ export async function createBooking(req: AuthenticatedRequest, res: Response, ne
   const { roomId } = req.body;
 
   try {
-    if (!userId || !roomId) return res.sendStatus(httpStatus.BAD_REQUEST);
+    // if (!userId || !roomId) return res.sendStatus(httpStatus.BAD_REQUEST);
 
     const booking = await bookingService.createBooking(userId, roomId);
     if (!booking) return res.sendStatus(httpStatus.NOT_FOUND);
