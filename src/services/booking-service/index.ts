@@ -70,7 +70,8 @@ async function upadateBooking(userId: number, roomId: number, bookingId: number)
     throw forbiddenBookingError();
   }
 
-  //  const result = await bookingRepository.findBooking(userId);
+  const isBooking = await bookingRepository.isBooking(bookingId, userId, roomId);
+  if (!isBooking) throw forbiddenBookingError();
 
   const booking = await bookingRepository.upadateBooking(userId, roomId, bookingId);
   if (!booking) throw notFoundError();

@@ -44,7 +44,7 @@ describe('GET /booking', () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
-    const response = await server.get('/payments').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -53,7 +53,7 @@ describe('GET /booking', () => {
     it('should respond with status 400 if query param ticketId is missing', async () => {
       const token = await generateValidToken();
 
-      const response = await server.get('/payments').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
