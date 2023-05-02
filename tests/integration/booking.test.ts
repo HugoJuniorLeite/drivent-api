@@ -55,7 +55,7 @@ describe('GET /booking', () => {
 
       const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
 
-      expect(response.status).toEqual(httpStatus.BAD_REQUEST);
+      expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
     it('should respond with status 404 when given ticket doesnt exist', async () => {
