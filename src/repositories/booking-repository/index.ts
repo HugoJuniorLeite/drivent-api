@@ -23,12 +23,12 @@ async function findRoomId(roomId: number) {
   });
 }
 
-async function isBooking(bookingId: number, userId: number, roomId: number) {
+async function isBooking(bookingId: number, userId: number /*, roomId: number*/) {
   return prisma.booking.findFirst({
     where: {
       id: bookingId,
       userId,
-      roomId,
+      //     roomId,
     },
   });
 }
